@@ -45,16 +45,15 @@ export function GlowSphere({
           opacity={active ? 0.9 : 0.3}
         />
       </mesh>
-      {/* Outer glow */}
       <mesh>
         <sphereGeometry args={[radius * 1.5, 16, 16]} />
         <meshBasicMaterial color={color} transparent opacity={active ? 0.1 : 0.02} />
       </mesh>
       {label && (
-        <Html position={[0, radius + 0.5, 0]} center distanceFactor={8}>
+        <Html position={[0, radius + 0.6, 0]} center distanceFactor={10}>
           <div className="text-center pointer-events-none select-none whitespace-nowrap">
-            <div className="text-xs font-display font-bold" style={{ color }}>{label}</div>
-            {sublabel && <div className="text-[10px] text-muted-foreground">{sublabel}</div>}
+            <div className="text-base font-display font-bold tracking-tight" style={{ color, textShadow: `0 0 12px ${color}60` }}>{label}</div>
+            {sublabel && <div className="text-sm text-muted-foreground mt-0.5">{sublabel}</div>}
           </div>
         </Html>
       )}

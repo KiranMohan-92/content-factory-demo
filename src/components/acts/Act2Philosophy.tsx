@@ -7,22 +7,32 @@ import { ParticleField } from '../three/ParticleField'
 import { GridFloor } from '../three/GridFloor'
 import { GlassCard } from '../shared/GlassCard'
 import { deutschTests } from '../../data/deutsch-tests'
-import { fadeUp, scaleIn } from '../../lib/animations'
+import { fadeUp } from '../../lib/animations'
+import { useMemo } from 'react'
 
-// Pentagon positions in 3D
 const PENTAGON_RADIUS = 2.5
-const pentagonPositions: [number, number, number][] = Array.from({ length: 5 }, (_, i) => {
-  const angle = (i * 2 * Math.PI) / 5 - Math.PI / 2
-  return [Math.cos(angle) * PENTAGON_RADIUS, Math.sin(angle) * PENTAGON_RADIUS, 0]
-})
+const TWO_PI = Math.PI * 2
 
-// Pentagon edges
-const edges: [number, number][] = [
-  [0, 1], [1, 2], [2, 3], [3, 4], [4, 0],
-]
+function getPentagonPositions(rotation: number): [number, number, number][] {
+  return Array.from({ length: 5 }, (_, i) => {
+    const angle = (i * TWO_PI) / 5 - Math.PI / 2 + rotation
+    return [Math.cos(angle) * PENTAGON_RADIUS, Math.sin(angle) * PENTAGON_RADIUS, 0]
+  })
+}
+
+const edges: [number, number][] = [[0,1],[1,2],[2,3],[3,4],[4,0]]
 
 export function Act2Philosophy() {
   const step = usePresentation(s => s.currentStep)
+
+  // Rotation to bring the active test to the top
+  const activeTestIndex = step >= 2 ? Math.min(step - 2, 4) : -1
+  const rotation = activeTestIndex >= 0 ? -(activeTestIndex * TWO_PI / 5) : 0
+
+  const positions = useMemo(() => getPentagonPositions(rotation), [rotation])
+
+  // Shift pentagon left when showing descriptions (steps 2+)
+  const groupX = step >= 2 ? -2.5 : 0
 
   return (
     <div className="w-full h-full relative">
@@ -31,112 +41,112 @@ export function Act2Philosophy() {
         <ParticleField count={80} color="#00b8b8" />
         <GridFloor />
 
-        {/* Pentagon of test spheres */}
-        {deutschTests.map((test, i) => (
-          <GlowSphere
-            key={test.name}
-            position={pentagonPositions[i]}
-            color={test.color}
-            label={step >= i + 2 ? test.name : ''}
-            sublabel={step >= i + 2 ? test.mlAnalogy : ''}
-            radius={0.25}
-            active={step >= i + 2}
-            pulsate={step >= i + 2}
-          />
-        ))}
+        <group position={[groupX, 0, 0]}>
+          {/* Pentagon spheres */}
+          {deutschTests.map((test, i) => (
+            <GlowSphere
+              key={test.name}
+              position={positions[i]}
+              color={test.color}
+              label={step >= 1 ? test.name : ''}
+              sublabel={step >= 2 && i === activeTestIndex ? test.mlAnalogy : ''}
+              radius={i === activeTestIndex ? 0.35 : 0.25}
+              active={step >= 1}
+              pulsate={i === activeTestIndex}
+            />
+          ))}
 
-        {/* Pentagon edges */}
-        {edges.map(([a, b], i) => (
-          <ConnectionBeam
-            key={i}
-            start={pentagonPositions[a]}
-            end={pentagonPositions[b]}
-            color={deutschTests[a].color}
-            active={step >= Math.max(a, b) + 2}
-          />
-        ))}
+          {/* Pentagon edges */}
+          {step >= 1 && edges.map(([a, b], i) => (
+            <ConnectionBeam
+              key={i}
+              start={positions[a]}
+              end={positions[b]}
+              color={deutschTests[a].color}
+              active
+            />
+          ))}
 
-        {/* Central "Good Explanation" orb */}
-        {step >= 6 && (
-          <GlowSphere
-            position={[0, 0, 0]}
-            color="#ffffff"
-            label="Good Explanation"
-            radius={0.4}
-            active
-            pulsate
-          />
-        )}
+          {/* Central orb at step 6+ */}
+          {step >= 6 && (
+            <GlowSphere
+              position={[0, 0, 0]}
+              color="#ffffff"
+              label="Good Explanation"
+              sublabel="Passes all 5 tests"
+              radius={0.4}
+              active
+              pulsate
+            />
+          )}
+        </group>
       </SceneContainer>
 
       {/* 2D Overlay */}
-      <div className="absolute inset-0 z-10 pointer-events-none px-8">
-        {/* Title */}
-        <div className="flex flex-col items-center pt-12">
-          <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0} className="text-center">
-            <h2 className="font-editorial text-lg text-muted-foreground italic mb-2">Act II</h2>
-            <h1 className="font-display text-4xl md:text-6xl font-bold gradient-text">
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        {/* Title — top center */}
+        <div className="pt-[5vh] px-12 text-center">
+          <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0}>
+            <h2 className="font-editorial text-xl text-muted-foreground italic mb-2">Act II</h2>
+            <h1 className="font-display tracking-tight text-4xl md:text-6xl font-extrabold text-metallic">
               Epistemology as a Loss Function
             </h1>
-            <p className="text-muted-foreground font-body text-sm mt-3 max-w-md mx-auto">
+            <p className="text-base md:text-lg text-muted-foreground font-body mt-3 max-w-lg mx-auto">
               5 independent tests — the epistemological equivalent of cross-validation
             </p>
           </motion.div>
         </div>
 
-        {/* Step 1: Intro card */}
-        {step >= 1 && (
+        {/* Step 1: Intro card — bottom center */}
+        {step === 1 && (
           <motion.div
-            className="absolute bottom-24 left-8 right-8 flex justify-center pointer-events-auto"
+            className="absolute bottom-[14vh] left-0 right-0 flex justify-center px-8 pointer-events-auto"
             variants={fadeUp}
             initial="hidden"
             animate="visible"
           >
-            <GlassCard className="max-w-lg p-4">
-              <p className="text-xs font-body text-muted-foreground">
-                David Deutsch's framework from <span className="text-foreground italic">The Beginning of Infinity</span> gives us{' '}
-                <span className="text-lime font-bold">5 independent validators</span>. Each catches a specific failure mode.
-                If an explanation passes all 5, it survives criticism from every angle.
+            <GlassCard className="max-w-lg px-7 py-5">
+              <p className="text-base font-body text-foreground/80 leading-relaxed">
+                David Deutsch's framework from{' '}
+                <span className="text-foreground italic">The Beginning of Infinity</span>{' '}
+                gives us <span className="text-lime font-bold">5 independent validators</span>.
+                Each catches a specific failure mode.
               </p>
             </GlassCard>
           </motion.div>
         )}
 
-        {/* Steps 2-6: Test cards (bottom-left) */}
-        {deutschTests.map((test, i) => (
-          step === i + 2 && (
-            <motion.div
-              key={test.name}
-              className="absolute bottom-24 left-8 right-8 flex justify-center pointer-events-auto"
-              variants={scaleIn}
-              initial="hidden"
-              animate="visible"
-            >
-              <GlassCard className="max-w-xl p-5">
-                <div className="flex items-start gap-4">
-                  <div className="w-3 h-3 rounded-full mt-1 flex-shrink-0" style={{ background: test.color }} />
-                  <div>
-                    <h3 className="font-display text-lg font-bold" style={{ color: test.color }}>
-                      {test.name}
-                      <span className="text-muted-foreground text-sm font-body ml-3">≈ {test.mlAnalogy}</span>
-                    </h3>
-                    <p className="text-xs font-body text-foreground/80 mt-1">{test.description}</p>
-                    <div className="mt-3 grid grid-cols-2 gap-3 text-[10px] font-body">
-                      <div className="bg-lime/5 border border-lime/20 rounded p-2">
-                        <div className="text-lime mb-1">✓ Pass</div>
-                        <div className="text-foreground/70">{test.passExample}</div>
-                      </div>
-                      <div className="bg-red-500/5 border border-red-500/20 rounded p-2">
-                        <div className="text-red-400 mb-1">✗ Fail</div>
-                        <div className="text-foreground/70">{test.failExample}</div>
-                      </div>
-                    </div>
-                  </div>
+        {/* Steps 2-6: Test descriptions — RIGHT side */}
+        {step >= 2 && step <= 6 && activeTestIndex >= 0 && activeTestIndex < 5 && (
+          <motion.div
+            key={activeTestIndex}
+            className="absolute right-10 top-[28vh] max-w-[440px] pointer-events-auto"
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <GlassCard className="px-7 py-6">
+              <h3 className="font-display tracking-tight text-2xl font-bold mb-1"
+                style={{ color: deutschTests[activeTestIndex].color, textShadow: `0 0 15px ${deutschTests[activeTestIndex].color}40` }}>
+                {deutschTests[activeTestIndex].name}
+              </h3>
+              <p className="text-base font-body text-cyan mb-4">
+                ≈ {deutschTests[activeTestIndex].mlAnalogy}
+              </p>
+              <div className="space-y-3 font-body text-base text-foreground/90">
+                <p>→ {deutschTests[activeTestIndex].description}</p>
+                <div className="mt-3 p-3 rounded bg-lime/5 border border-lime/15">
+                  <span className="text-lime text-sm font-bold">✓ Pass:</span>
+                  <p className="text-sm text-foreground/70 mt-1">{deutschTests[activeTestIndex].passExample}</p>
                 </div>
-              </GlassCard>
-            </motion.div>
-          )
-        ))}
+                <div className="p-3 rounded bg-red-500/5 border border-red-500/15">
+                  <span className="text-red-400 text-sm font-bold">✗ Fail:</span>
+                  <p className="text-sm text-foreground/70 mt-1">{deutschTests[activeTestIndex].failExample}</p>
+                </div>
+              </div>
+            </GlassCard>
+          </motion.div>
+        )}
       </div>
     </div>
   )

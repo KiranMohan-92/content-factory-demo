@@ -13,120 +13,110 @@ export function Act1Problem() {
 
   return (
     <div className="w-full h-full relative">
-      {/* 3D Background — 3 orbiting spheres representing bad explanation sources */}
+      {/* 3D — elements in LEFT half, lower area */}
       <SceneContainer>
         <ParticleField count={80} color="#e11d48" />
         <GridFloor />
         {step >= 1 && (
-          <GlowSphere position={[-3, 1.5, -1]} color="#f59e0b" label="Books & Gurus" radius={0.35} active pulsate />
-        )}
-        {step >= 1 && (
-          <GlowSphere position={[0, -0.5, -1]} color="#e11d48" label="AI-Generated" radius={0.45} active pulsate />
-        )}
-        {step >= 1 && (
-          <GlowSphere position={[3, 1.5, -1]} color="#9933ff" label="Social Media" radius={0.3} active pulsate />
+          <>
+            <GlowSphere position={[-3.5, -1, -1]} color="#f59e0b" label="Books & Gurus" radius={0.35} active pulsate />
+            <GlowSphere position={[-1, -2, -2]} color="#e11d48" label="AI-Generated" radius={0.45} active pulsate />
+            <GlowSphere position={[1.5, -1, -1]} color="#9933ff" label="Social Media" radius={0.3} active pulsate />
+          </>
         )}
         {step >= 2 && (
           <>
-            <ConnectionBeam start={[-3, 1.5, -1]} end={[0, -0.5, -1]} color="#e11d48" active />
-            <ConnectionBeam start={[3, 1.5, -1]} end={[0, -0.5, -1]} color="#e11d48" active />
-            <ConnectionBeam start={[-3, 1.5, -1]} end={[3, 1.5, -1]} color="#e11d48" active />
+            <ConnectionBeam start={[-3.5, -1, -1]} end={[-1, -2, -2]} color="#e11d48" active />
+            <ConnectionBeam start={[1.5, -1, -1]} end={[-1, -2, -2]} color="#e11d48" active />
+            <ConnectionBeam start={[-3.5, -1, -1]} end={[1.5, -1, -1]} color="#f59e0b" active />
           </>
         )}
         {step >= 3 && (
-          <GlowSphere position={[0, 2.5, 0]} color="#ccff00" label="Hard-to-Vary Filter" sublabel="David Deutsch" radius={0.5} active pulsate />
+          <GlowSphere position={[-1, 1, 1]} color="#ccff00" label="Hard-to-Vary Filter" sublabel="David Deutsch" radius={0.5} active pulsate />
         )}
       </SceneContainer>
 
-      {/* 2D Overlay — positioned to NOT overlap 3D */}
+      {/* 2D Overlay */}
       <div className="absolute inset-0 z-10 pointer-events-none">
-
-        {/* Step 0: Big title — top area only */}
+        {/* Title — top center, clear of 3D */}
         <motion.div
-          className="pt-[8vh] px-12 text-center"
+          className="pt-[7vh] px-12 text-center"
           variants={fadeUp}
           initial="hidden"
           animate="visible"
           custom={0}
         >
           <h2 className="font-editorial text-xl text-muted-foreground italic mb-3">Act I</h2>
-          <h1 className="font-display text-5xl md:text-7xl font-extrabold leading-tight">
-            <span className="text-foreground">How Do You Know</span><br />
-            <span className="gradient-text">It's a Good Explanation?</span>
+          <h1 className="font-display tracking-tight text-5xl md:text-7xl font-extrabold text-metallic">
+            The Explanation Test
           </h1>
+          <p className="text-lg md:text-xl text-muted-foreground font-body mt-4">
+            Most explanations don't survive it.
+          </p>
         </motion.div>
 
-        {/* Step 1: The crisis — bottom area, clear of 3D center */}
+        {/* Step 1: The crisis — RIGHT side card */}
         {step >= 1 && (
           <motion.div
-            className="absolute bottom-[14vh] left-0 right-0 flex justify-center px-8"
+            className="absolute right-10 top-[35vh] max-w-[420px] pointer-events-auto"
             variants={fadeUp}
             initial="hidden"
             animate="visible"
           >
-            <GlassCard className="max-w-3xl px-8 py-6 w-full">
-              <p className="font-body text-base md:text-lg text-foreground leading-relaxed">
-                Every day we're surrounded by explanations —
-                from <span className="text-yellow-400 font-bold">bestselling books</span>,{' '}
-                <span className="text-purple font-bold">social media</span>, and now{' '}
-                <span className="text-red-400 font-bold">AI systems</span> that generate
-                content at unprecedented scale. They sound convincing. They're well-structured.
-                They cite sources.
-              </p>
-              <p className="font-body text-lg md:text-xl text-lime font-bold mt-4">
-                But how do we know they're actually correct?
-              </p>
+            <GlassCard glow="lime" className="px-7 py-6">
+              <h3 className="font-display tracking-tight text-xl font-bold text-lime glow-lime mb-4">
+                The Crisis
+              </h3>
+              <div className="space-y-3 font-body text-base text-foreground/90">
+                <p>→ AI content: convincing but unverifiable</p>
+                <p>→ Books & gurus: unfalsifiable advice</p>
+                <p>→ Old heuristics: broken at scale</p>
+                <p>→ No systematic filter exists</p>
+              </div>
             </GlassCard>
           </motion.div>
         )}
 
-        {/* Step 2: The deeper problem */}
-        {step >= 2 && (
+        {/* Step 2: Why now — RIGHT side card (replaces step 1) */}
+        {step >= 2 && step < 3 && (
           <motion.div
-            className="absolute bottom-[14vh] left-0 right-0 flex justify-center px-8"
+            className="absolute right-10 top-[35vh] max-w-[420px] pointer-events-auto"
             variants={fadeUp}
             initial="hidden"
             animate="visible"
           >
-            <GlassCard glow="lime" className="max-w-3xl px-8 py-6 w-full">
-              <p className="font-body text-base md:text-lg text-foreground leading-relaxed">
-                As AI models get smarter, the content they produce becomes{' '}
-                <span className="text-red-400 font-bold">indistinguishable from expert writing</span>.
-                Logical inconsistencies hide behind polished prose. Bad explanations
-                wear the costume of good ones. The old heuristics — "trust the expert",
-                "check the source" — no longer work.
-              </p>
-              <p className="font-body text-lg md:text-xl text-foreground mt-4">
-                We need a <span className="text-lime font-bold">systematic, testable framework</span>{' '}
-                for separating good explanations from convincing nonsense.
-              </p>
+            <GlassCard glow="cyan" className="px-7 py-6">
+              <h3 className="font-display tracking-tight text-xl font-bold text-cyan mb-4">
+                Why Now
+              </h3>
+              <div className="space-y-3 font-body text-base text-foreground/90">
+                <p>→ Smarter models = better disguised nonsense</p>
+                <p>→ Polished prose hides logical gaps</p>
+                <p>→ "Trust the expert" fails at machine scale</p>
+                <p>→ We need a testable, objective filter</p>
+              </div>
             </GlassCard>
           </motion.div>
         )}
 
-        {/* Step 3: The solution — David Deutsch */}
+        {/* Step 3: The solution — RIGHT side card (replaces step 2) */}
         {step >= 3 && (
           <motion.div
-            className="absolute bottom-[14vh] left-0 right-0 flex justify-center px-8"
+            className="absolute right-10 top-[35vh] max-w-[420px] pointer-events-auto"
             variants={fadeUp}
             initial="hidden"
             animate="visible"
           >
-            <GlassCard glow="lime" className="max-w-3xl px-8 py-6 w-full">
-              <h3 className="font-display text-2xl font-bold text-lime mb-3">
-                David Deutsch's Epistemology — Productionized
+            <GlassCard glow="lime" className="px-7 py-6">
+              <h3 className="font-display tracking-tight text-xl font-bold gradient-text mb-4">
+                The Solution
               </h3>
-              <p className="font-body text-base md:text-lg text-foreground leading-relaxed">
-                A <span className="text-lime font-bold">good explanation is hard to vary</span> —
-                you can't change its details without destroying its ability to explain.
-                This single criterion, from <span className="italic text-foreground/90">The Beginning of Infinity</span>,
-                gives us an objective, testable filter for every explanation we encounter.
-              </p>
-              <p className="font-body text-base md:text-lg text-foreground mt-4">
-                We built an <span className="text-cyan font-bold">agentic system</span> that
-                applies this framework at scale — 5 specialized AI agents that systematically
-                test, challenge, and verify every piece of content before publication.
-              </p>
+              <div className="space-y-3 font-body text-base text-foreground/90">
+                <p>→ Good explanations are <span className="text-lime font-bold">hard to vary</span></p>
+                <p>→ Change any detail → breaks the explanation</p>
+                <p>→ From <span className="italic text-foreground/70">The Beginning of Infinity</span></p>
+                <p>→ Productionized as a 5-agent agentic system</p>
+              </div>
             </GlassCard>
           </motion.div>
         )}

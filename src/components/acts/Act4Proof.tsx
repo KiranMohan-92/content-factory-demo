@@ -10,10 +10,10 @@ import { DimensionBar } from '../shared/DimensionBar'
 import { missionTeamsArticle } from '../../data/article-scores'
 import { fadeUp } from '../../lib/animations'
 
-// 3D column positions in a semicircle
-const columnPositions: [number, number, number][] = missionTeamsArticle.dimensions.map((_, i) => {
-  const angle = (Math.PI * 0.8) * (i / (missionTeamsArticle.dimensions.length - 1)) - Math.PI * 0.4
-  return [Math.cos(angle) * 3.5, -1.5, Math.sin(angle) * 2 - 1]
+// Floating score orbs in a circle — sized by weight
+const orbPositions: [number, number, number][] = missionTeamsArticle.dimensions.map((_, i) => {
+  const angle = (i * 2 * Math.PI) / missionTeamsArticle.dimensions.length - Math.PI / 2
+  return [Math.cos(angle) * 3, Math.sin(angle) * 2, -1]
 })
 
 const SUBSTACK_URL = 'https://knowledgearchitect.substack.com/'
@@ -23,87 +23,72 @@ export function Act4Proof() {
 
   return (
     <div className="w-full h-full relative">
-      {/* 3D Scene: column chart */}
+      {/* 3D Scene: floating score orbs */}
       <SceneContainer>
-        <ParticleField count={60} color="#ccff00" />
+        <ParticleField count={50} color="#ccff00" />
         <GridFloor />
 
-        {/* Score columns */}
+        {/* Central score orb — centered, not too high */}
+        <GlowSphere
+          position={[0, 0, 0]}
+          color="#ccff00"
+          label={step >= 1 ? '9.43' : ''}
+          sublabel={step >= 1 ? 'Overall Score' : ''}
+          radius={0.5}
+          active={step >= 1}
+          pulsate
+        />
+
+        {/* 7 dimension orbs in a circle */}
         {step >= 1 && missionTeamsArticle.dimensions.map((dim, i) => {
-          const height = (dim.score / 10) * 3
           const color = dim.score >= 9.5 ? '#ccff00' : dim.score >= 9.0 ? '#00b8b8' : '#f59e0b'
+          const size = 0.15 + dim.weight * 0.8  // Bigger orb for higher weight
           return (
-            <group key={dim.name} position={columnPositions[i]}>
-              <mesh position={[0, height / 2, 0]}>
-                <boxGeometry args={[0.25 + dim.weight * 1.5, height, 0.25 + dim.weight * 1.5]} />
-                <meshStandardMaterial
-                  color={color}
-                  emissive={color}
-                  emissiveIntensity={0.5}
-                  transparent
-                  opacity={0.7}
-                />
-              </mesh>
-            </group>
+            <GlowSphere
+              key={dim.name}
+              position={orbPositions[i]}
+              color={color}
+              label={dim.name.split(' ')[0]}
+              sublabel={dim.score.toFixed(1)}
+              radius={size}
+              active
+              pulsate={false}
+            />
           )
         })}
-
-        {/* Threshold planes */}
-        {step >= 1 && (
-          <>
-            <mesh position={[0, (9.3 / 10) * 3 - 1.5, 0]}>
-              <planeGeometry args={[10, 0.005]} />
-              <meshBasicMaterial color="#ccff00" transparent opacity={0.15} side={2} />
-            </mesh>
-            <mesh position={[0, (9.5 / 10) * 3 - 1.5, 0]}>
-              <planeGeometry args={[10, 0.005]} />
-              <meshBasicMaterial color="#00b8b8" transparent opacity={0.15} side={2} />
-            </mesh>
-          </>
-        )}
-
-        {/* Central score orb */}
-        <GlowSphere
-          position={[0, 1.5, 0]}
-          color="#ccff00"
-          label={step >= 1 ? '9.43/10' : ''}
-          sublabel="Overall Score"
-          radius={0.4}
-          active={step >= 1}
-        />
       </SceneContainer>
 
       {/* 2D Overlay */}
       <div className="absolute inset-0 z-10 pointer-events-none">
 
-        {/* Title — top area */}
+        {/* Title — top center */}
         <div className="pt-[5vh] px-12 text-center">
           <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0}>
             <h2 className="font-editorial text-xl text-muted-foreground italic mb-2">Act IV</h2>
-            <h1 className="font-display text-4xl md:text-6xl font-extrabold gradient-text">
+            <h1 className="font-display tracking-tight text-4xl md:text-6xl font-extrabold text-metallic">
               Real Output, Real Scores
             </h1>
-            <p className="text-foreground/70 font-body text-sm md:text-base mt-3 max-w-2xl mx-auto">
+            <p className="text-base text-foreground/60 font-body mt-3 max-w-2xl mx-auto">
               "{missionTeamsArticle.title}"
             </p>
           </motion.div>
         </div>
 
-        {/* Score gauges — top right, well spaced */}
+        {/* Score gauges — centered below title */}
         {step >= 0 && (
           <motion.div
-            className="absolute top-[18vh] right-10 flex gap-6"
+            className="absolute top-[20vh] left-1/2 -translate-x-1/2 flex gap-8"
             variants={fadeUp} initial="hidden" animate="visible" custom={0.2}
           >
-            <ScoreGauge score={9.43} label="Editor" threshold={9.3} size={110} active={step >= 1} />
-            <ScoreGauge score={9.5} label="CODEX" threshold={9.5} size={110} active={step >= 1} />
+            <ScoreGauge score={9.43} label="Editor" threshold={9.3} size={120} active={step >= 1} />
+            <ScoreGauge score={9.5} label="CODEX" threshold={9.5} size={120} active={step >= 1} />
           </motion.div>
         )}
 
-        {/* Dimension bars — left side, well spaced */}
+        {/* Dimension bars — left side */}
         {step >= 1 && (
           <motion.div
-            className="absolute left-10 top-[18vh] w-[300px] space-y-3"
+            className="absolute left-10 top-[22vh] w-[300px] space-y-3"
             variants={fadeUp} initial="hidden" animate="visible"
           >
             {missionTeamsArticle.dimensions.map((dim, i) => (
@@ -120,21 +105,21 @@ export function Act4Proof() {
         )}
 
         {/* Article excerpt with link */}
-        {step >= 2 && (
+        {step >= 2 && step < 3 && (
           <motion.div
-            className="absolute bottom-[14vh] left-0 right-0 flex justify-center px-8 pointer-events-auto"
+            className="absolute bottom-[13vh] left-0 right-0 flex justify-center px-8 pointer-events-auto"
             variants={fadeUp} initial="hidden" animate="visible"
           >
             <GlassCard className="max-w-2xl px-8 py-6 w-full">
-              <h3 className="text-sm font-body text-lime uppercase tracking-wider mb-3">Article Opening</h3>
-              <p className="text-base md:text-lg font-editorial italic text-foreground/90 leading-relaxed">
+              <h3 className="text-base font-body text-lime uppercase tracking-wider mb-3 glow-lime">Article Opening</h3>
+              <p className="text-lg md:text-xl font-editorial italic text-foreground/85 leading-relaxed">
                 "{missionTeamsArticle.excerpt}"
               </p>
               <a
                 href={SUBSTACK_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 mt-4 text-sm font-body text-lime hover:text-lime/80 transition-colors underline underline-offset-4"
+                className="inline-flex items-center gap-2 mt-4 text-base font-body text-lime hover:text-lime/80 transition-colors underline underline-offset-4"
               >
                 Read the full article on Substack →
               </a>
@@ -145,11 +130,11 @@ export function Act4Proof() {
         {/* Counterarguments */}
         {step >= 3 && (
           <motion.div
-            className="absolute bottom-[14vh] left-0 right-0 flex justify-center px-8 pointer-events-auto"
+            className="absolute bottom-[13vh] left-0 right-0 flex justify-center px-8 pointer-events-auto"
             variants={fadeUp} initial="hidden" animate="visible"
           >
             <GlassCard glow="cyan" className="max-w-2xl px-8 py-6 w-full">
-              <h3 className="text-sm font-body text-cyan uppercase tracking-wider mb-4">
+              <h3 className="text-base font-body text-cyan uppercase tracking-wider mb-4 glow-lime" style={{ textShadow: '0 0 10px rgba(0,184,184,0.3)' }}>
                 3 Steelmanned Counterarguments
               </h3>
               <div className="space-y-4">
@@ -161,7 +146,7 @@ export function Act4Proof() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.15 }}
                   >
-                    <span className="text-cyan text-base font-bold flex-shrink-0">{i + 1}.</span>
+                    <span className="text-cyan text-lg font-bold font-display flex-shrink-0">{i + 1}.</span>
                     <div>
                       <p className="text-base font-body text-foreground/90">"{ca.objection}"</p>
                       <p className="text-sm font-body text-muted-foreground mt-1">{ca.quality}</p>

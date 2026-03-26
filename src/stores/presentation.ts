@@ -3,7 +3,7 @@ import { create } from 'zustand'
 const ACT_STEPS: Record<number, number> = {
   1: 4,  // Problem: title, counter, table, callout
   2: 7,  // Philosophy: intro, test1-5, summary
-  3: 6,  // Architecture: appear, travel, writing, editor-gate, codex-gate, publish
+  3: 7,  // Architecture: title, research, analysis, writing, editor, codex, publish-ready
   4: 4,  // Proof: scores, dimensions, excerpt, counterarguments
   5: 1,  // Explore: free interaction
 }
