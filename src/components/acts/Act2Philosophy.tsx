@@ -7,7 +7,6 @@ import { ParticleField } from '../three/ParticleField'
 import { GridFloor } from '../three/GridFloor'
 import { GlassCard } from '../shared/GlassCard'
 import { deutschTests } from '../../data/deutsch-tests'
-import { fadeUp } from '../../lib/animations'
 import { useMemo } from 'react'
 
 const PENTAGON_RADIUS = 1.8
@@ -24,23 +23,19 @@ const edges: [number, number][] = [[0,1],[1,2],[2,3],[3,4],[4,0]]
 
 export function Act2Philosophy() {
   const step = usePresentation(s => s.currentStep)
-
   const activeTestIndex = step >= 2 ? Math.min(step - 2, 4) : -1
   const rotation = activeTestIndex >= 0 ? -(activeTestIndex * TWO_PI / 5) : 0
   const positions = useMemo(() => getPentagonPositions(rotation), [rotation])
-
-  // Pentagon shifts left and down when descriptions show
-  const groupX = step >= 2 ? -2.2 : 0
-  const groupY = -0.5 // Always slightly below center to avoid header
+  const groupX = step >= 2 ? -2.5 : 0
 
   return (
     <div className="w-full h-full relative">
       <SceneContainer>
-        <ParticleField count={80} color="#00b8b8" />
+        <ParticleField count={80} color="#4DD9D0" />
         <GridFloor />
-        <group position={[groupX, groupY, 0]}>
+        <group position={[groupX, -0.5, 0]}>
           {deutschTests.map((test, i) => {
-            const showLabel = step >= 2 ? i <= activeTestIndex : (step === 1 && i === 0)
+            const showLabel = step >= 2 ? i <= activeTestIndex : false
             return (
               <GlowSphere
                 key={test.name}
@@ -65,54 +60,58 @@ export function Act2Philosophy() {
 
       <div className="absolute inset-0 z-10 pointer-events-none">
         <div className="pt-[5vh] md:pt-[6vh] px-6 md:px-12 text-center">
-          <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0}>
-            <h2 className="font-editorial text-lg md:text-xl text-muted-foreground italic mb-2">Act II</h2>
-            <h1 className="font-display tracking-tight text-3xl md:text-5xl lg:text-6xl font-extrabold text-metallic">
+          <motion.div
+            initial={{ opacity: 0, filter: 'blur(12px)', y: 15 }}
+            animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <h2 className="font-editorial text-xl md:text-2xl text-muted-foreground italic mb-2">Act II</h2>
+            <h1 className="font-display tracking-tight text-4xl md:text-6xl lg:text-7xl font-extrabold text-metallic">
               Epistemology as a Loss Function
             </h1>
-            <p className="text-sm md:text-base text-muted-foreground font-body mt-2 md:mt-3 max-w-md mx-auto">
+            <p className="text-base md:text-lg text-muted-foreground font-body mt-3 max-w-lg mx-auto">
               5 independent tests — the epistemological equivalent of cross-validation
             </p>
           </motion.div>
         </div>
 
-        {/* Step 1: Intro */}
         {step === 1 && (
           <motion.div className="absolute bottom-[12vh] inset-x-0 flex justify-center px-4 md:px-8 pointer-events-auto"
-            variants={fadeUp} initial="hidden" animate="visible">
-            <GlassCard className="max-w-[90vw] md:max-w-lg px-6 md:px-7 py-5">
-              <p className="text-sm md:text-base font-body text-foreground/80 leading-relaxed">
-                David Deutsch's framework from <span className="text-foreground italic">The Beginning of Infinity</span>{' '}
-                gives us <span className="text-lime font-semibold">5 independent validators</span>. Each catches a specific failure mode.
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <GlassCard className="max-w-[90vw] md:max-w-lg px-7 py-6">
+              <p className="text-base md:text-lg font-body text-[#EDF1FF]/80 leading-relaxed">
+                David Deutsch's framework from <span className="text-[#EDF1FF] italic">The Beginning of Infinity</span>{' '}
+                gives us <span className="text-lime font-semibold glow-lime">5 independent validators</span>. Each catches a specific failure mode.
               </p>
             </GlassCard>
           </motion.div>
         )}
 
-        {/* Steps 2-6: Test descriptions — center-right, one at a time */}
-        <div className="absolute right-4 md:right-[8vw] top-[30vh] md:top-[28vh] max-w-[85vw] md:max-w-[400px] pointer-events-auto">
+        <div className="absolute right-6 md:right-[6vw] top-[28vh] md:top-[26vh] max-w-[88vw] md:max-w-[440px] pointer-events-auto">
           <AnimatePresence mode="wait">
             {step >= 2 && step <= 6 && activeTestIndex >= 0 && activeTestIndex < 5 && (
               <motion.div key={activeTestIndex}
-                initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
-                <GlassCard className="px-5 md:px-7 py-5 md:py-6">
-                  <h3 className="font-display tracking-tight text-xl md:text-2xl font-bold text-shine mb-1"
-                    style={{ color: deutschTests[activeTestIndex].color }}>
+                initial={{ opacity: 0, x: 40, filter: 'blur(8px)' }}
+                animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, x: -20, filter: 'blur(4px)' }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
+                <GlassCard className="px-7 py-6">
+                  <h3 className="font-display tracking-tight text-2xl md:text-3xl font-bold mb-1"
+                    style={{ color: deutschTests[activeTestIndex].color, textShadow: `0 0 20px ${deutschTests[activeTestIndex].color}40` }}>
                     {deutschTests[activeTestIndex].name}
                   </h3>
-                  <p className="text-sm md:text-base font-body text-cyan mb-3">
+                  <p className="text-base md:text-lg font-body text-cyan mb-4">
                     ≈ {deutschTests[activeTestIndex].mlAnalogy}
                   </p>
-                  <div className="space-y-2.5 font-body text-sm md:text-base text-foreground/90">
+                  <div className="space-y-3 font-body text-base md:text-lg text-[#EDF1FF]/90">
                     <p>→ {deutschTests[activeTestIndex].description}</p>
-                    <div className="mt-2 p-3 rounded bg-lime/5 border border-lime/15">
-                      <span className="text-lime text-xs md:text-sm font-bold">✓ Pass:</span>
-                      <p className="text-xs md:text-sm text-foreground/70 mt-1">{deutschTests[activeTestIndex].passExample}</p>
+                    <div className="mt-3 p-4 rounded-lg bg-lime/5 border border-lime/15">
+                      <span className="text-lime text-sm md:text-base font-bold">✓ Pass:</span>
+                      <p className="text-sm md:text-base text-[#EDF1FF]/70 mt-1">{deutschTests[activeTestIndex].passExample}</p>
                     </div>
-                    <div className="p-3 rounded bg-red-500/5 border border-red-500/15">
-                      <span className="text-red-400 text-xs md:text-sm font-bold">✗ Fail:</span>
-                      <p className="text-xs md:text-sm text-foreground/70 mt-1">{deutschTests[activeTestIndex].failExample}</p>
+                    <div className="p-4 rounded-lg bg-red-500/5 border border-red-500/15">
+                      <span className="text-red-400 text-sm md:text-base font-bold">✗ Fail:</span>
+                      <p className="text-sm md:text-base text-[#EDF1FF]/70 mt-1">{deutschTests[activeTestIndex].failExample}</p>
                     </div>
                   </div>
                 </GlassCard>

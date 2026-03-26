@@ -8,11 +8,9 @@ import { ParticleField } from '../three/ParticleField'
 import { GridFloor } from '../three/GridFloor'
 import { GlassCard } from '../shared/GlassCard'
 import { pipelinePhases, mlAnalogies } from '../../data/pipeline-phases'
-import { fadeUp } from '../../lib/animations'
 import { OrbitControls } from '@react-three/drei'
 
-// Map agent index to horizontal screen position (percentage from left)
-const AGENT_SCREEN_X = ['10%', '25%', '42%', '58%', '72%']
+const AGENT_SCREEN_X = ['12%', '28%', '44%', '60%', '76%']
 
 export function Act3Architecture() {
   const step = usePresentation(s => s.currentStep)
@@ -48,63 +46,65 @@ export function Act3Architecture() {
       </SceneContainer>
 
       <div className="absolute inset-0 z-10 pointer-events-none">
-        {/* Title */}
         <div className="pt-[4vh] md:pt-[5vh] px-6 md:px-12 text-center">
-          <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0}>
-            <h2 className="font-editorial text-lg md:text-xl text-muted-foreground italic mb-2">Act III</h2>
-            <h1 className="font-display tracking-tight text-3xl md:text-5xl lg:text-6xl font-extrabold text-metallic">
+          <motion.div
+            initial={{ opacity: 0, filter: 'blur(12px)', y: 15 }}
+            animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <h2 className="font-editorial text-xl md:text-2xl text-muted-foreground italic mb-2">Act III</h2>
+            <h1 className="font-display tracking-tight text-4xl md:text-6xl lg:text-7xl font-extrabold text-metallic">
               5-Agent Pipeline
             </h1>
-            <p className="text-sm md:text-base text-foreground/50 font-body mt-2 max-w-lg mx-auto">
+            <p className="text-base md:text-lg text-muted-foreground font-body mt-3 max-w-xl mx-auto">
               Each agent catches errors the previous can't
             </p>
           </motion.div>
         </div>
 
-        {/* Agent cards — positioned near each agent, one at a time */}
         <AnimatePresence mode="wait">
           {activeAgent >= 0 && activeAgent < 5 && (
             <motion.div
               key={activeAgent}
               className="absolute bottom-[10vh] md:bottom-[12vh] pointer-events-auto px-4"
-              style={{ left: AGENT_SCREEN_X[activeAgent], transform: 'translateX(-50%)', maxWidth: 'min(400px, 85vw)' }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              style={{ left: AGENT_SCREEN_X[activeAgent], transform: 'translateX(-50%)', maxWidth: 'min(420px, 88vw)' }}
+              initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -15, filter: 'blur(4px)' }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             >
               <GlassCard
-                className="px-5 md:px-6 py-4 md:py-5"
+                className="px-6 md:px-7 py-5 md:py-6"
                 glow={activeAgent === 4 ? 'cyan' : 'lime'}
-                style={activeAgent === 4 ? { borderColor: 'rgba(236, 72, 153, 0.3)' } : undefined}
+                style={activeAgent === 4 ? { borderColor: 'rgba(236, 72, 153, 0.25)' } : undefined}
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center text-base font-bold font-display flex-shrink-0"
+                  <div className="w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-lg font-bold font-display flex-shrink-0"
                     style={{
-                      background: pipelinePhases[activeAgent].color + '20',
+                      background: pipelinePhases[activeAgent].color + '15',
                       color: pipelinePhases[activeAgent].color,
-                      border: `2px solid ${pipelinePhases[activeAgent].color}50`,
-                      boxShadow: `0 0 15px ${pipelinePhases[activeAgent].color}20`
+                      border: `1.5px solid ${pipelinePhases[activeAgent].color}40`,
+                      boxShadow: `0 0 20px ${pipelinePhases[activeAgent].color}15`
                     }}>
                     {activeAgent + 1}
                   </div>
                   <div>
-                    <h3 className="font-display tracking-tight text-lg md:text-xl font-bold text-shine"
+                    <h3 className="font-display tracking-tight text-xl md:text-2xl font-bold text-shine"
                       style={{ color: pipelinePhases[activeAgent].color }}>
                       {pipelinePhases[activeAgent].agent}
                     </h3>
                     {pipelinePhases[activeAgent].gate && (
-                      <span className="text-xs md:text-sm font-body text-muted-foreground">
+                      <span className="text-sm md:text-base font-body text-muted-foreground">
                         Gate: ≥{pipelinePhases[activeAgent].gate!.threshold}/10
                       </span>
                     )}
                   </div>
                 </div>
-                <p className="font-body text-sm md:text-base text-foreground/85 leading-relaxed">
+                <p className="font-body text-base md:text-lg text-[#EDF1FF]/85 leading-relaxed">
                   {pipelinePhases[activeAgent].description}
                 </p>
-                <div className="mt-3 pt-2 border-t border-border/20 text-xs md:text-sm font-mono text-muted-foreground">
-                  Output → <code className="text-foreground/60">{pipelinePhases[activeAgent].output}</code>
+                <div className="mt-3 pt-2 border-t border-white/5 text-sm md:text-base font-mono text-muted-foreground">
+                  → <code className="text-[#EDF1FF]/50">{pipelinePhases[activeAgent].output}</code>
                 </div>
               </GlassCard>
             </motion.div>
@@ -113,21 +113,23 @@ export function Act3Architecture() {
           {step >= 6 && (
             <motion.div key="publish"
               className="absolute bottom-[10vh] md:bottom-[12vh] inset-x-0 flex justify-center px-4 pointer-events-auto"
-              initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
-              transition={{ type: 'spring', stiffness: 200, damping: 20 }}>
-              <GlassCard glow="lime" className="max-w-[90vw] md:max-w-xl px-6 md:px-8 py-5 md:py-6 text-center">
-                <h3 className="font-display tracking-tight text-xl md:text-2xl font-bold text-lime glow-lime mb-3">
+              initial={{ opacity: 0, scale: 0.95, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>
+              <GlassCard glow="lime" className="max-w-[90vw] md:max-w-xl px-7 md:px-8 py-6 text-center">
+                <h3 className="font-display tracking-tight text-2xl md:text-3xl font-bold text-lime glow-lime mb-3">
                   ✓ Publish Ready
                 </h3>
-                <p className="font-body text-sm md:text-base text-foreground/60 mb-4">
+                <p className="font-body text-base md:text-lg text-[#EDF1FF]/60 mb-5">
                   Both quality gates passed. Sequential error correction complete.
                 </p>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-left max-w-sm mx-auto">
+                <div className="grid grid-cols-2 gap-x-5 gap-y-2 text-left max-w-md mx-auto">
                   {mlAnalogies.map((a) => (
-                    <div key={a.ml} className="flex gap-1.5 text-xs md:text-sm font-body">
+                    <div key={a.ml} className="flex gap-2 text-sm md:text-base font-body">
                       <span className="text-cyan">{a.ml}</span>
                       <span className="text-muted-foreground">→</span>
-                      <span className="text-foreground/60">{a.cf}</span>
+                      <span className="text-[#EDF1FF]/60">{a.cf}</span>
                     </div>
                   ))}
                 </div>

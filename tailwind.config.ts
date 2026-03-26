@@ -15,8 +15,10 @@ export default {
         'muted-foreground': 'hsl(var(--muted-foreground))',
         border: 'hsl(var(--border))',
         lime: '#ccff00',
-        cyan: '#00b8b8',
+        cyan: '#4DD9D0',
         purple: '#9933ff',
+        orange: '#f59e0b',
+        void: '#02040a',
       },
       fontFamily: {
         display: ['Inter', 'system-ui', 'sans-serif'],
