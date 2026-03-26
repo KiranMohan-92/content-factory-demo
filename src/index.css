@@ -148,22 +148,24 @@ body {
    GLASSMORPHISM — Exact portfolio values
 ============================================= */
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(2, 4, 10, 0.82);
   backdrop-filter: blur(32px) saturate(180%);
   -webkit-backdrop-filter: blur(32px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: var(--radius);
   box-shadow:
-    0 12px 60px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 12px 60px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02);
   transition: all 0.4s var(--ease);
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.11);
   box-shadow:
-    0 16px 70px rgba(0, 0, 0, 0.7),
+    0 16px 70px rgba(0, 0, 0, 0.8),
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03),
     0 0 80px rgba(204, 255, 0, 0.02);
 }
 
@@ -246,20 +248,22 @@ body {
 }
 
 .glow-box-lime {
-  background: rgba(204, 255, 0, 0.04);
+  background: rgba(2, 4, 10, 0.84);
   border: 1px solid rgba(204, 255, 0, 0.22);
   box-shadow:
-    0 12px 60px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(204, 255, 0, 0.04) inset,
-    0 1px 0 rgba(204, 255, 0, 0.1) inset,
-    0 0 80px rgba(204, 255, 0, 0.03);
+    0 12px 60px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(204, 255, 0, 0.08),
+    inset 0 0 0 1px rgba(204, 255, 0, 0.03),
+    0 0 80px rgba(204, 255, 0, 0.04);
 }
 
 .glow-box-cyan {
-  background: rgba(77, 217, 208, 0.03);
+  background: rgba(2, 4, 10, 0.84);
   border: 1px solid rgba(77, 217, 208, 0.2);
   box-shadow:
-    0 12px 60px rgba(0, 0, 0, 0.55),
+    0 12px 60px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(77, 217, 208, 0.06),
+    inset 0 0 0 1px rgba(77, 217, 208, 0.03),
     0 0 60px rgba(77, 217, 208, 0.04);
 }
 
