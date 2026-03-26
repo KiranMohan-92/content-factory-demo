@@ -19,9 +19,13 @@ export default {
         purple: '#9933ff',
       },
       fontFamily: {
-        display: ['Syne', 'sans-serif'],
-        body: ['Geist Mono', 'monospace'],
+        display: ['Inter', 'system-ui', 'sans-serif'],
+        body: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
         editorial: ['Instrument Serif', 'serif'],
+      },
+      letterSpacing: {
+        tightest: '-0.04em',
       },
       keyframes: {
         'fade-up': {
