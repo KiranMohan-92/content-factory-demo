@@ -67,28 +67,26 @@ export function Act5Interactive() {
       </SceneContainer>
 
       {/* 2D Overlay */}
-      <div className="absolute inset-0 z-10 pointer-events-none px-6">
-        {/* Title */}
-        <div className="flex flex-col items-center pt-8">
-          <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0} className="text-center">
-            <h2 className="font-editorial text-lg text-muted-foreground italic mb-2">Act V</h2>
-            <h1 className="font-display text-4xl md:text-5xl font-bold gradient-text">
+      <div className="absolute inset-0 z-10 pointer-events-none">
+
+        {/* Title — compact, no instructions */}
+        <div className="pt-[4vh] px-12 text-center">
+          <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0}>
+            <h2 className="font-editorial text-xl text-muted-foreground italic mb-2">Act V</h2>
+            <h1 className="font-display text-4xl md:text-6xl font-extrabold gradient-text">
               Explore
             </h1>
-            <p className="text-muted-foreground font-body text-xs mt-2">
-              Orbit the 3D scene with your mouse. Click tabs to dive deeper.
-            </p>
           </motion.div>
         </div>
 
-        {/* Tabs */}
-        <div className="absolute top-28 left-1/2 -translate-x-1/2 flex gap-2 pointer-events-auto">
+        {/* Tabs — well below title with clear gap */}
+        <div className="absolute top-[14vh] left-1/2 -translate-x-1/2 flex gap-3 pointer-events-auto">
           {TABS.map(t => (
             <button
               key={t}
               onClick={() => setTab(t)}
               className={cn(
-                'px-3 py-1.5 rounded text-xs font-body border transition-all',
+                'px-5 py-2 rounded-lg text-sm font-body border transition-all',
                 tab === t
                   ? 'border-lime/40 bg-lime/10 text-lime'
                   : 'border-border text-muted-foreground hover:border-muted-foreground/40'
@@ -99,28 +97,33 @@ export function Act5Interactive() {
           ))}
         </div>
 
-        {/* Tab content */}
+        {/* Orbit hint — bottom-right, subtle */}
+        <div className="absolute bottom-[13vh] right-8 text-[10px] font-body text-muted-foreground/40 pointer-events-none">
+          Drag to orbit · Scroll to zoom
+        </div>
+
+        {/* Tab content — bottom area */}
         <motion.div
-          className="absolute bottom-20 left-6 right-6 flex justify-center pointer-events-auto"
+          className="absolute bottom-[16vh] left-8 right-8 flex justify-center pointer-events-auto"
           key={tab}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
           {tab === 'Pipeline' && (
-            <GlassCard className="max-w-2xl p-4 w-full">
-              <h3 className="text-xs font-body text-lime uppercase tracking-wider mb-3">5-Agent Pipeline</h3>
-              <div className="grid grid-cols-5 gap-2">
+            <GlassCard className="max-w-3xl px-8 py-5 w-full">
+              <h3 className="text-sm font-body text-lime uppercase tracking-wider mb-4">5-Agent Pipeline</h3>
+              <div className="grid grid-cols-5 gap-4">
                 {pipelinePhases.map((phase, i) => (
                   <div key={phase.id} className="text-center">
-                    <div className="w-8 h-8 rounded-full mx-auto mb-1 flex items-center justify-center text-xs font-bold"
+                    <div className="w-10 h-10 rounded-full mx-auto mb-2 flex items-center justify-center text-sm font-bold"
                       style={{ background: phase.color + '20', color: phase.color, border: `1px solid ${phase.color}40` }}>
                       {i + 1}
                     </div>
-                    <div className="text-[9px] font-display font-bold" style={{ color: phase.color }}>{phase.label}</div>
-                    <div className="text-[8px] text-muted-foreground mt-0.5 leading-tight">{phase.description.slice(0, 50)}...</div>
+                    <div className="text-xs font-display font-bold" style={{ color: phase.color }}>{phase.label}</div>
+                    <div className="text-[11px] text-muted-foreground mt-1 leading-snug">{phase.description.slice(0, 60)}...</div>
                     {phase.gate && (
-                      <div className="text-[8px] text-muted-foreground mt-1">Gate: {phase.gate.threshold}</div>
+                      <div className="text-[11px] text-foreground/60 mt-1 font-bold">Gate: {phase.gate.threshold}</div>
                     )}
                   </div>
                 ))}
@@ -129,16 +132,16 @@ export function Act5Interactive() {
           )}
 
           {tab === 'Philosophy' && (
-            <GlassCard className="max-w-2xl p-4 w-full">
-              <h3 className="text-xs font-body text-cyan uppercase tracking-wider mb-3">5 Deutsch Tests ↔ ML Concepts</h3>
-              <div className="space-y-2">
+            <GlassCard className="max-w-3xl px-8 py-5 w-full">
+              <h3 className="text-sm font-body text-cyan uppercase tracking-wider mb-4">5 Deutsch Tests ↔ ML Concepts</h3>
+              <div className="space-y-3">
                 {deutschTests.map(test => (
-                  <div key={test.name} className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: test.color }} />
-                    <span className="text-xs font-display w-28" style={{ color: test.color }}>{test.name}</span>
-                    <span className="text-muted-foreground text-[10px]">≈</span>
-                    <span className="text-xs font-body text-cyan w-32">{test.mlAnalogy}</span>
-                    <span className="text-[9px] text-muted-foreground flex-1">{test.catches}</span>
+                  <div key={test.name} className="flex items-center gap-4">
+                    <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: test.color }} />
+                    <span className="text-sm font-display font-bold w-32" style={{ color: test.color }}>{test.name}</span>
+                    <span className="text-muted-foreground text-sm">≈</span>
+                    <span className="text-sm font-body text-cyan w-36">{test.mlAnalogy}</span>
+                    <span className="text-xs text-muted-foreground flex-1">{test.catches}</span>
                   </div>
                 ))}
               </div>
@@ -146,11 +149,11 @@ export function Act5Interactive() {
           )}
 
           {tab === 'Scores' && (
-            <GlassCard className="max-w-md p-4 w-full">
-              <h3 className="text-xs font-body text-lime uppercase tracking-wider mb-3">
-                Real Scores: {missionTeamsArticle.title.slice(0, 40)}...
+            <GlassCard className="max-w-lg px-8 py-5 w-full">
+              <h3 className="text-sm font-body text-lime uppercase tracking-wider mb-4">
+                Real Scores: {missionTeamsArticle.title.slice(0, 45)}...
               </h3>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {missionTeamsArticle.dimensions.map((dim, i) => (
                   <DimensionBar
                     key={dim.name}
@@ -161,32 +164,32 @@ export function Act5Interactive() {
                   />
                 ))}
               </div>
-              <div className="mt-3 pt-2 border-t border-border flex justify-between text-xs font-body">
+              <div className="mt-4 pt-3 border-t border-border flex justify-between text-sm font-body">
                 <span className="text-muted-foreground">Overall</span>
-                <span className="text-lime font-bold">{missionTeamsArticle.overallScore}/10</span>
+                <span className="text-lime font-bold text-lg">{missionTeamsArticle.overallScore}/10</span>
               </div>
             </GlassCard>
           )}
 
           {tab === 'System' && (
-            <GlassCard className="max-w-2xl p-4 w-full">
-              <h3 className="text-xs font-body text-purple uppercase tracking-wider mb-3">Why This Architecture is Hard-to-Vary</h3>
-              <div className="grid grid-cols-2 gap-3 text-[10px] font-body">
-                <div className="bg-lime/5 border border-lime/10 rounded p-2">
-                  <div className="text-lime font-bold mb-1">Why Sequential?</div>
-                  <div className="text-foreground/70">Can't analyze before researching. Can't edit before writing. Each agent criticizes completed work.</div>
+            <GlassCard className="max-w-3xl px-8 py-5 w-full">
+              <h3 className="text-sm font-body text-purple uppercase tracking-wider mb-4">Why This Architecture is Hard-to-Vary</h3>
+              <div className="grid grid-cols-2 gap-4 text-sm font-body">
+                <div className="bg-lime/5 border border-lime/10 rounded-lg p-4">
+                  <div className="text-lime font-bold mb-2">Why Sequential?</div>
+                  <div className="text-foreground/70 leading-relaxed">Can't analyze before researching. Can't edit before writing. Each agent criticizes completed work.</div>
                 </div>
-                <div className="bg-cyan/5 border border-cyan/10 rounded p-2">
-                  <div className="text-cyan font-bold mb-1">Why Specialized?</div>
-                  <div className="text-foreground/70">Combined roles create blind spots. You know what you meant, so you don't see where it's unclear.</div>
+                <div className="bg-cyan/5 border border-cyan/10 rounded-lg p-4">
+                  <div className="text-cyan font-bold mb-2">Why Specialized?</div>
+                  <div className="text-foreground/70 leading-relaxed">Combined roles create blind spots. You know what you meant, so you don't see where it's unclear.</div>
                 </div>
-                <div className="bg-purple/5 border border-purple/10 rounded p-2">
-                  <div className="text-purple font-bold mb-1">Why Dual Gates?</div>
-                  <div className="text-foreground/70">Editor catches surface issues. CODEX catches deep issues. The 0.2-point gap is where world-class lives.</div>
+                <div className="bg-purple/5 border border-purple/10 rounded-lg p-4">
+                  <div className="text-purple font-bold mb-2">Why Dual Gates?</div>
+                  <div className="text-foreground/70 leading-relaxed">Editor catches surface issues. CODEX catches deep issues. The 0.2-point gap is where world-class lives.</div>
                 </div>
-                <div className="bg-orange/5 border border-orange/10 rounded p-2">
-                  <div className="text-orange font-bold mb-1">Why Can't Skip?</div>
-                  <div className="text-foreground/70">Skipping research → bias. Skipping analysis → no insight. Skipping CODEX → 2.9-point gap returns.</div>
+                <div className="bg-orange/5 border border-orange/10 rounded-lg p-4">
+                  <div className="text-orange font-bold mb-2">Why Can't Skip?</div>
+                  <div className="text-foreground/70 leading-relaxed">Skipping research → bias. Skipping analysis → no insight. Skipping CODEX → 2.9-point gap returns.</div>
                 </div>
               </div>
             </GlassCard>
