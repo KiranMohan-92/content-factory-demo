@@ -16,50 +16,36 @@ import { OrbitControls } from '@react-three/drei'
 const TABS = ['Agents', 'Philosophy', 'System'] as const
 type Tab = (typeof TABS)[number]
 
-// Pentagon shifted further left
 const PENTAGON_R = 2
 const pentPositions: [number, number, number][] = Array.from({ length: 5 }, (_, i) => {
   const a = (i * 2 * Math.PI) / 5 - Math.PI / 2
-  return [Math.cos(a) * PENTAGON_R - 4, Math.sin(a) * PENTAGON_R, 0]
+  return [Math.cos(a) * PENTAGON_R - 2, Math.sin(a) * PENTAGON_R, 0]
 })
 const pentEdges: [number, number][] = [[0,1],[1,2],[2,3],[3,4],[4,0]]
-
-// Pipeline points shifted left by 2 units
-const SHIFTED_PIPELINE: [number, number, number][] = DEFAULT_POINTS.map(
-  ([x, y, z]) => [x - 2, y, z]
-)
 
 export function Act5Interactive() {
   const [tab, setTab] = useState<Tab>('Agents')
 
   return (
     <div className="w-full h-full relative">
-      {/* 3D — camera shifted to look at the LEFT side */}
-      <SceneContainer>
-        <OrbitControls
-          enableZoom
-          enablePan={false}
-          autoRotate
-          autoRotateSpeed={0.5}
-          target={[-3, 0, 0]}
-        />
-        <ParticleField count={60} color="#ccff00" spread={20} />
-        <GridFloor />
-
-        {/* Pipeline shifted left */}
-        <PipelineTrack points={SHIFTED_PIPELINE} color="#ccff00" active progress={1} />
-        {pipelinePhases.map((phase, i) => (
-          <GlowSphere key={phase.id} position={SHIFTED_PIPELINE[i]} color={phase.color} label={phase.label} radius={0.2} active />
-        ))}
-
-        {/* Pentagon already positioned left (x - 4) */}
-        {deutschTests.map((test, i) => (
-          <GlowSphere key={test.name} position={pentPositions[i]} color={test.color} label={test.name} radius={0.18} active />
-        ))}
-        {pentEdges.map(([a, b], i) => (
-          <ConnectionBeam key={i} start={pentPositions[a]} end={pentPositions[b]} color="#4DD9D0" active />
-        ))}
-      </SceneContainer>
+      {/* 3D — constrained to LEFT 55% of viewport */}
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '55%', height: '100%' }}>
+        <SceneContainer>
+          <OrbitControls enableZoom enablePan={false} autoRotate autoRotateSpeed={0.5} />
+          <ParticleField count={60} color="#ccff00" spread={15} />
+          <GridFloor />
+          <PipelineTrack points={DEFAULT_POINTS} color="#ccff00" active progress={1} />
+          {pipelinePhases.map((phase, i) => (
+            <GlowSphere key={phase.id} position={DEFAULT_POINTS[i]} color={phase.color} label={phase.label} radius={0.2} active />
+          ))}
+          {deutschTests.map((test, i) => (
+            <GlowSphere key={test.name} position={pentPositions[i]} color={test.color} label={test.name} radius={0.18} active />
+          ))}
+          {pentEdges.map(([a, b], i) => (
+            <ConnectionBeam key={i} start={pentPositions[a]} end={pentPositions[b]} color="#4DD9D0" active />
+          ))}
+        </SceneContainer>
+      </div>
 
       {/* 2D Overlay */}
       <div className="absolute inset-0 z-10 pointer-events-none">
@@ -100,7 +86,7 @@ export function Act5Interactive() {
 
         {/* Tab content — RIGHT half of screen */}
         <motion.div
-          className="absolute top-[14vh] md:top-[16vh] bottom-[10vh] right-4 md:right-[3vw] w-[92vw] md:w-[48vw] flex items-start pointer-events-auto"
+          className="absolute top-[14vh] md:top-[16vh] bottom-[10vh] right-4 md:right-[3vw] w-[92vw] md:w-[44vw] flex items-start pointer-events-auto"
           key={tab}
           initial={{ opacity: 0, x: 20, filter: 'blur(6px)' }}
           animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
