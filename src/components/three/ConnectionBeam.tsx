@@ -16,8 +16,10 @@ export function ConnectionBeam({ start, end, color = '#ccff00', active = true, p
   const lineObj = useMemo(() => {
     const points = [new THREE.Vector3(...start), new THREE.Vector3(...end)]
     const geometry = new THREE.BufferGeometry().setFromPoints(points)
-    const material = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.3 })
-    return new THREE.Line(geometry, material)
+    const material = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.3, depthWrite: false })
+    const line = new THREE.Line(geometry, material)
+    line.renderOrder = -1
+    return line
   }, [start, end, color])
 
   useFrame(({ clock }) => {

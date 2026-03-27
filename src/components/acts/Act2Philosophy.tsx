@@ -87,7 +87,7 @@ export function Act2Philosophy() {
           </motion.div>
         )}
 
-        <div className="absolute right-6 md:right-[6vw] top-[28vh] md:top-[26vh] max-w-[88vw] md:max-w-[440px] pointer-events-auto">
+        <div className="absolute right-6 md:right-[14vw] top-[28vh] md:top-[26vh] max-w-[88vw] md:max-w-[440px] pointer-events-auto">
           <AnimatePresence mode="wait">
             {step >= 2 && step <= 6 && activeTestIndex >= 0 && activeTestIndex < 5 && (
               <motion.div key={activeTestIndex}

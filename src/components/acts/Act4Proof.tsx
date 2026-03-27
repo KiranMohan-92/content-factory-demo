@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { usePresentation } from '../../stores/presentation'
 import { SceneContainer } from '../three/SceneContainer'
-import { GlowSphere } from '../three/GlowSphere'
 import { ParticleField } from '../three/ParticleField'
 import { GridFloor } from '../three/GridFloor'
 import { GlassCard } from '../shared/GlassCard'
@@ -9,34 +8,19 @@ import { ScoreGauge } from '../shared/ScoreGauge'
 import { DimensionBar } from '../shared/DimensionBar'
 import { publishedArticle } from '../../data/article-scores'
 
-const orbPositions: [number, number, number][] = publishedArticle.dimensions.map((_, i) => {
-  const angle = (i * 2 * Math.PI) / publishedArticle.dimensions.length - Math.PI / 2
-  return [Math.cos(angle) * 2.8, Math.sin(angle) * 1.6 - 1.2, -1.5]
-})
-
 export function Act4Proof() {
   const step = usePresentation(s => s.currentStep)
 
   return (
     <div className="w-full h-full relative">
+      {/* 3D — just ambient particles, no orbs */}
       <SceneContainer>
-        <ParticleField count={50} color="#ccff00" />
+        <ParticleField count={40} color="#ccff00" />
         <GridFloor />
-        <GlowSphere position={[0, -0.8, 0]} color="#ccff00"
-          label={step >= 1 ? '9.43' : ''} sublabel={step >= 1 ? 'Overall' : ''}
-          radius={0.45} active={step >= 1} pulsate />
-        {step >= 1 && publishedArticle.dimensions.map((dim, i) => {
-          const color = dim.score >= 9.5 ? '#ccff00' : dim.score >= 9.0 ? '#4DD9D0' : '#f59e0b'
-          const size = 0.12 + dim.weight * 0.7
-          return (
-            <GlowSphere key={dim.name} position={orbPositions[i]} color={color}
-              label={dim.name.split(' ')[0]} sublabel={dim.score.toFixed(1)}
-              radius={size} active pulsate={false} />
-          )
-        })}
       </SceneContainer>
 
       <div className="absolute inset-0 z-10 pointer-events-none">
+        {/* Title */}
         <div className="pt-[4vh] md:pt-[5vh] px-6 md:px-12 text-center">
           <motion.div
             initial={{ opacity: 0, filter: 'blur(12px)', y: 15 }}
@@ -57,26 +41,30 @@ export function Act4Proof() {
           </motion.div>
         </div>
 
-        {/* Score gauges — left side */}
+        {/* Score gauges + dimension bars — centered layout */}
         {step >= 1 && (
-          <motion.div className="absolute left-6 md:left-10 top-[22vh] flex flex-col gap-5"
-            initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
-            <ScoreGauge score={9.43} label="Editor" threshold={9.3} size={110} active />
-            <ScoreGauge score={9.5} label="CODEX" threshold={9.5} size={110} active />
+          <motion.div
+            className="absolute inset-x-0 top-[24vh] flex flex-col md:flex-row items-center md:items-start justify-center gap-8 md:gap-16 px-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            {/* Gauges */}
+            <div className="flex gap-6 md:gap-8">
+              <ScoreGauge score={9.43} label="Editor" threshold={9.3} size={110} active />
+              <ScoreGauge score={9.5} label="CODEX" threshold={9.5} size={110} active />
+            </div>
+
+            {/* Dimension bars */}
+            <div className="w-[280px] md:w-[320px] space-y-2.5">
+              {publishedArticle.dimensions.map((dim, i) => (
+                <DimensionBar key={dim.name} name={dim.name} score={dim.score} weight={dim.weight} delay={i * 0.08} active />
+              ))}
+            </div>
           </motion.div>
         )}
 
-        {/* Dimension bars — right side */}
-        {step >= 1 && (
-          <motion.div className="absolute right-6 md:right-10 top-[22vh] w-[260px] md:w-[300px] space-y-2.5"
-            initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.3 }}>
-            {publishedArticle.dimensions.map((dim, i) => (
-              <DimensionBar key={dim.name} name={dim.name} score={dim.score} weight={dim.weight} delay={i * 0.08} active />
-            ))}
-          </motion.div>
-        )}
-
-        {/* Counterarguments — bottom, step 2 only */}
+        {/* Counterarguments — bottom */}
         <div className="absolute bottom-[10vh] md:bottom-[12vh] inset-x-0 flex justify-center px-4 md:px-8 pointer-events-auto">
           <AnimatePresence mode="wait">
             {step === 2 && (

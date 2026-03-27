@@ -35,7 +35,7 @@ export function GlowSphere({
 
   return (
     <group position={position}>
-      <mesh ref={meshRef} onClick={onClick}>
+      <mesh ref={meshRef} onClick={onClick} renderOrder={1}>
         <sphereGeometry args={[radius, 32, 32]} />
         <meshStandardMaterial
           color={color}
@@ -43,11 +43,12 @@ export function GlowSphere({
           emissiveIntensity={active ? 0.8 : 0.2}
           transparent
           opacity={active ? 0.9 : 0.3}
+          depthWrite
         />
       </mesh>
-      <mesh>
+      <mesh renderOrder={0}>
         <sphereGeometry args={[radius * 1.5, 16, 16]} />
-        <meshBasicMaterial color={color} transparent opacity={active ? 0.1 : 0.02} />
+        <meshBasicMaterial color={color} transparent opacity={active ? 0.1 : 0.02} depthWrite={false} />
       </mesh>
       {label && (
         <Html position={[0, radius + 0.6, 0]} center distanceFactor={10}>
