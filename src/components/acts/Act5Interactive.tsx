@@ -16,6 +16,7 @@ import { OrbitControls } from '@react-three/drei'
 const TABS = ['Agents', 'Philosophy', 'System'] as const
 type Tab = (typeof TABS)[number]
 
+// Pentagon shifted further left
 const PENTAGON_R = 2
 const pentPositions: [number, number, number][] = Array.from({ length: 5 }, (_, i) => {
   const a = (i * 2 * Math.PI) / 5 - Math.PI / 2
@@ -23,19 +24,35 @@ const pentPositions: [number, number, number][] = Array.from({ length: 5 }, (_, 
 })
 const pentEdges: [number, number][] = [[0,1],[1,2],[2,3],[3,4],[4,0]]
 
+// Pipeline points shifted left by 2 units
+const SHIFTED_PIPELINE: [number, number, number][] = DEFAULT_POINTS.map(
+  ([x, y, z]) => [x - 2, y, z]
+)
+
 export function Act5Interactive() {
   const [tab, setTab] = useState<Tab>('Agents')
 
   return (
     <div className="w-full h-full relative">
+      {/* 3D — camera shifted to look at the LEFT side */}
       <SceneContainer>
-        <OrbitControls enableZoom enablePan={false} autoRotate autoRotateSpeed={0.5} />
+        <OrbitControls
+          enableZoom
+          enablePan={false}
+          autoRotate
+          autoRotateSpeed={0.5}
+          target={[-3, 0, 0]}
+        />
         <ParticleField count={60} color="#ccff00" spread={20} />
         <GridFloor />
-        <PipelineTrack points={DEFAULT_POINTS} color="#ccff00" active progress={1} />
+
+        {/* Pipeline shifted left */}
+        <PipelineTrack points={SHIFTED_PIPELINE} color="#ccff00" active progress={1} />
         {pipelinePhases.map((phase, i) => (
-          <GlowSphere key={phase.id} position={DEFAULT_POINTS[i]} color={phase.color} label={phase.label} radius={0.2} active />
+          <GlowSphere key={phase.id} position={SHIFTED_PIPELINE[i]} color={phase.color} label={phase.label} radius={0.2} active />
         ))}
+
+        {/* Pentagon already positioned left (x - 4) */}
         {deutschTests.map((test, i) => (
           <GlowSphere key={test.name} position={pentPositions[i]} color={test.color} label={test.name} radius={0.18} active />
         ))}
@@ -44,8 +61,11 @@ export function Act5Interactive() {
         ))}
       </SceneContainer>
 
+      {/* 2D Overlay */}
       <div className="absolute inset-0 z-10 pointer-events-none">
-        <div className="pt-[3vh] md:pt-[4vh] px-6 md:px-12 text-center">
+
+        {/* Title — top left */}
+        <div className="pt-[3vh] md:pt-[4vh] px-6 md:px-12 text-center md:text-left md:max-w-[45vw]">
           <motion.div
             initial={{ opacity: 0, filter: 'blur(12px)', y: 15 }}
             animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
@@ -58,7 +78,8 @@ export function Act5Interactive() {
           </motion.div>
         </div>
 
-        <div className="absolute top-[12vh] md:top-[14vh] left-1/2 -translate-x-1/2 flex gap-2 md:gap-3 pointer-events-auto">
+        {/* Tabs — RIGHT side, below title */}
+        <div className="absolute top-[4vh] md:top-[5vh] right-6 md:right-[4vw] flex gap-2 md:gap-3 pointer-events-auto">
           {TABS.map(t => (
             <button key={t} onClick={() => setTab(t)}
               className={cn(
@@ -72,22 +93,25 @@ export function Act5Interactive() {
           ))}
         </div>
 
-        <div className="absolute bottom-[10vh] right-6 md:right-8 text-xs font-body text-muted-foreground/25 pointer-events-none">
+        {/* Orbit hint — bottom left */}
+        <div className="absolute bottom-[10vh] left-6 md:left-8 text-xs font-body text-muted-foreground/25 pointer-events-none">
           Drag to orbit · Scroll to zoom
         </div>
 
+        {/* Tab content — RIGHT half of screen */}
         <motion.div
-          className="absolute bottom-[12vh] md:bottom-[14vh] left-4 right-4 md:left-8 md:right-8 flex justify-center pointer-events-auto"
-          key={tab} initial={{ opacity: 0, y: 15, filter: 'blur(6px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
-
+          className="absolute top-[14vh] md:top-[16vh] bottom-[10vh] right-4 md:right-[3vw] w-[92vw] md:w-[48vw] flex items-start pointer-events-auto"
+          key={tab}
+          initial={{ opacity: 0, x: 20, filter: 'blur(6px)' }}
+          animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        >
           {tab === 'Agents' && (
-            <GlassCard className="max-w-[95vw] md:max-w-4xl px-6 md:px-8 py-5 md:py-6 w-full">
+            <GlassCard className="w-full px-6 md:px-8 py-5 md:py-6">
               <h3 className="text-base md:text-lg font-body text-lime uppercase tracking-wider mb-4 glow-lime">
                 Agent Details & Orchestrator
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 {(['researcher', 'analyzer', 'writer', 'editor', 'codex', 'orchestrator'] as const).map(key => {
                   const agent = agentDetails[key]
                   const color = key === 'researcher' ? '#ccff00' : key === 'analyzer' ? '#4DD9D0' : key === 'writer' ? '#9933ff' : key === 'editor' ? '#f59e0b' : key === 'codex' ? '#ec4899' : '#EDF1FF'
@@ -119,7 +143,7 @@ export function Act5Interactive() {
           )}
 
           {tab === 'Philosophy' && (
-            <GlassCard className="max-w-[95vw] md:max-w-3xl px-6 md:px-8 py-5 md:py-6 w-full">
+            <GlassCard className="w-full px-6 md:px-8 py-5 md:py-6">
               <h3 className="text-base md:text-lg font-body text-cyan uppercase tracking-wider mb-4"
                 style={{ textShadow: '0 0 15px rgba(77,217,208,0.3)' }}>
                 5 Deutsch Tests ↔ ML Concepts
@@ -131,7 +155,6 @@ export function Act5Interactive() {
                     <span className="text-sm md:text-base font-display font-bold tracking-tight w-28 md:w-36" style={{ color: test.color }}>{test.name}</span>
                     <span className="text-muted-foreground text-sm md:text-base hidden md:inline">≈</span>
                     <span className="text-sm md:text-base font-body text-cyan w-32 md:w-44">{test.mlAnalogy}</span>
-                    <span className="text-xs md:text-sm text-muted-foreground flex-1 hidden lg:inline">{test.catches}</span>
                   </div>
                 ))}
               </div>
@@ -139,27 +162,27 @@ export function Act5Interactive() {
           )}
 
           {tab === 'System' && (
-            <GlassCard className="max-w-[95vw] md:max-w-3xl px-6 md:px-8 py-5 md:py-6 w-full">
+            <GlassCard className="w-full px-6 md:px-8 py-5 md:py-6">
               <h3 className="text-base md:text-lg font-body text-purple uppercase tracking-wider mb-4"
                 style={{ textShadow: '0 0 15px rgba(153,51,255,0.3)' }}>
                 Why This Architecture is Hard-to-Vary
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5 text-base md:text-lg font-body">
-                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-lime/8 p-4 md:p-5">
-                  <div className="text-lime font-bold font-display tracking-tight text-lg md:text-xl mb-2">Why Sequential?</div>
-                  <div className="text-[#EDF1FF]/70 leading-relaxed text-sm md:text-base">Can't analyze before researching. Can't edit before writing. Each agent criticizes completed work.</div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 text-sm md:text-base font-body">
+                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-lime/8 p-4">
+                  <div className="text-lime font-bold font-display tracking-tight text-base md:text-lg mb-2">Why Sequential?</div>
+                  <div className="text-[#EDF1FF]/70 leading-relaxed">Can't analyze before researching. Can't edit before writing. Each agent criticizes completed work.</div>
                 </div>
-                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-cyan/8 p-4 md:p-5">
-                  <div className="text-cyan font-bold font-display tracking-tight text-lg md:text-xl mb-2">Why Specialized?</div>
-                  <div className="text-[#EDF1FF]/70 leading-relaxed text-sm md:text-base">Combined roles create blind spots. You know what you meant, so you don't see where it's unclear.</div>
+                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-cyan/8 p-4">
+                  <div className="text-cyan font-bold font-display tracking-tight text-base md:text-lg mb-2">Why Specialized?</div>
+                  <div className="text-[#EDF1FF]/70 leading-relaxed">Combined roles create blind spots. You know what you meant, so you don't see where it's unclear.</div>
                 </div>
-                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-purple/8 p-4 md:p-5">
-                  <div className="text-purple font-bold font-display tracking-tight text-lg md:text-xl mb-2">Why Dual Gates?</div>
-                  <div className="text-[#EDF1FF]/70 leading-relaxed text-sm md:text-base">Editor catches surface issues. CODEX catches deep issues. The 0.2-point gap is where world-class lives.</div>
+                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-purple/8 p-4">
+                  <div className="text-purple font-bold font-display tracking-tight text-base md:text-lg mb-2">Why Dual Gates?</div>
+                  <div className="text-[#EDF1FF]/70 leading-relaxed">Editor catches surface issues. CODEX catches deep issues. The 0.2-point gap is where world-class lives.</div>
                 </div>
-                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-orange/8 p-4 md:p-5">
-                  <div className="text-orange font-bold font-display tracking-tight text-lg md:text-xl mb-2">Why Can't Skip?</div>
-                  <div className="text-[#EDF1FF]/70 leading-relaxed text-sm md:text-base">Skipping research → bias. Skipping analysis → no insight. Skipping CODEX → 2.9-point gap returns.</div>
+                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-orange/8 p-4">
+                  <div className="text-orange font-bold font-display tracking-tight text-base md:text-lg mb-2">Why Can't Skip?</div>
+                  <div className="text-[#EDF1FF]/70 leading-relaxed">Skipping research → bias. Skipping analysis → no insight. Skipping CODEX → 2.9-point gap returns.</div>
                 </div>
               </div>
             </GlassCard>
