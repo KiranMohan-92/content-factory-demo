@@ -92,7 +92,7 @@ export function Act5Interactive() {
                   const agent = agentDetails[key]
                   const color = key === 'researcher' ? '#ccff00' : key === 'analyzer' ? '#4DD9D0' : key === 'writer' ? '#9933ff' : key === 'editor' ? '#f59e0b' : key === 'codex' ? '#ec4899' : '#EDF1FF'
                   return (
-                    <div key={key} className="glass-card p-3 md:p-4 !bg-[rgba(2,4,10,0.88)]" style={{ borderColor: `${color}15` }}>
+                    <div key={key} className="glass-card p-3 md:p-4 !bg-[rgba(2,4,10,0.94)]" style={{ borderColor: `${color}15` }}>
                       <h4 className="font-display tracking-tight text-sm md:text-base font-bold mb-2" style={{ color }}>
                         {agent.name}
                       </h4>
@@ -145,19 +145,19 @@ export function Act5Interactive() {
                 Why This Architecture is Hard-to-Vary
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5 text-base md:text-lg font-body">
-                <div className="glass-card !bg-[rgba(2,4,10,0.88)] border-lime/8 p-4 md:p-5">
+                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-lime/8 p-4 md:p-5">
                   <div className="text-lime font-bold font-display tracking-tight text-lg md:text-xl mb-2">Why Sequential?</div>
                   <div className="text-[#EDF1FF]/70 leading-relaxed text-sm md:text-base">Can't analyze before researching. Can't edit before writing. Each agent criticizes completed work.</div>
                 </div>
-                <div className="glass-card !bg-[rgba(2,4,10,0.88)] border-cyan/8 p-4 md:p-5">
+                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-cyan/8 p-4 md:p-5">
                   <div className="text-cyan font-bold font-display tracking-tight text-lg md:text-xl mb-2">Why Specialized?</div>
                   <div className="text-[#EDF1FF]/70 leading-relaxed text-sm md:text-base">Combined roles create blind spots. You know what you meant, so you don't see where it's unclear.</div>
                 </div>
-                <div className="glass-card !bg-[rgba(2,4,10,0.88)] border-purple/8 p-4 md:p-5">
+                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-purple/8 p-4 md:p-5">
                   <div className="text-purple font-bold font-display tracking-tight text-lg md:text-xl mb-2">Why Dual Gates?</div>
                   <div className="text-[#EDF1FF]/70 leading-relaxed text-sm md:text-base">Editor catches surface issues. CODEX catches deep issues. The 0.2-point gap is where world-class lives.</div>
                 </div>
-                <div className="glass-card !bg-[rgba(2,4,10,0.88)] border-orange/8 p-4 md:p-5">
+                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-orange/8 p-4 md:p-5">
                   <div className="text-orange font-bold font-display tracking-tight text-lg md:text-xl mb-2">Why Can't Skip?</div>
                   <div className="text-[#EDF1FF]/70 leading-relaxed text-sm md:text-base">Skipping research → bias. Skipping analysis → no insight. Skipping CODEX → 2.9-point gap returns.</div>
                 </div>
