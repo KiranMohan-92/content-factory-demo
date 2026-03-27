@@ -66,7 +66,7 @@ export function Act2Philosophy() {
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <h2 className="font-editorial text-xl md:text-2xl text-muted-foreground italic mb-2">Act II</h2>
-            <h1 className="font-display tracking-tight text-4xl md:text-6xl lg:text-7xl font-extrabold text-metallic">
+            <h1 className="font-display tracking-tight text-4xl md:text-6xl lg:text-7xl font-extrabold text-[#EDF1FF]">
               Epistemology as a Loss Function
             </h1>
             <p className="text-base md:text-lg text-muted-foreground font-body mt-3 max-w-lg mx-auto">

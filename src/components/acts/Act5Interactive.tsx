@@ -52,7 +52,7 @@ export function Act5Interactive() {
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <h2 className="font-editorial text-xl md:text-2xl text-muted-foreground italic mb-1">Act V</h2>
-            <h1 className="font-display tracking-tight text-4xl md:text-6xl lg:text-7xl font-extrabold text-metallic">
+            <h1 className="font-display tracking-tight text-4xl md:text-6xl lg:text-7xl font-extrabold text-[#EDF1FF]">
               Explore
             </h1>
           </motion.div>
