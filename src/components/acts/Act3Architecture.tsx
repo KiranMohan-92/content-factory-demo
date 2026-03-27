@@ -36,11 +36,11 @@ export function Act3Architecture() {
           />
         ))}
         {step >= 4 && (
-          <GateBarrier position={[1.8, -0.8, 0]} threshold={9.3} label="Editor Gate" color="#f59e0b"
+          <GateBarrier position={[1.8, -0.8, 0]} threshold={9.5} label="Editor Gate" color="#f59e0b"
             passed={step >= 5 ? true : undefined} active />
         )}
         {step >= 5 && (
-          <GateBarrier position={[4.2, -0.3, 0]} threshold={9.5} label="CODEX Gate" color="#ec4899"
+          <GateBarrier position={[4.2, -0.3, 0]} threshold={9.3} label="CODEX Gate" color="#ec4899"
             passed={step >= 6 ? true : undefined} active />
         )}
       </SceneContainer>
