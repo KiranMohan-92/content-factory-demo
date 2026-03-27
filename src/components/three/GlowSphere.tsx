@@ -41,8 +41,8 @@ export function GlowSphere({
           color={color}
           emissive={color}
           emissiveIntensity={active ? 0.8 : 0.2}
-          transparent
-          opacity={active ? 0.9 : 0.3}
+          transparent={!active}
+          opacity={active ? 1.0 : 0.3}
           depthWrite
         />
       </mesh>
