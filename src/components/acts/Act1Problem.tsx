@@ -55,7 +55,7 @@ export function Act1Problem() {
         </motion.div>
 
         {/* RIGHT side cards — one at a time */}
-        <div className="absolute right-6 md:right-[calc(50%-280px)] top-[32vh] md:top-[30vh] max-w-[88vw] md:max-w-[420px] pointer-events-auto">
+        <div className="absolute right-6 md:right-[8vw] top-[32vh] md:top-[30vh] max-w-[88vw] md:max-w-[420px] pointer-events-auto">
           <AnimatePresence mode="wait">
             {step === 1 && (
               <motion.div key="crisis"
