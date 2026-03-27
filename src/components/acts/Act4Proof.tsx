@@ -51,8 +51,8 @@ export function Act4Proof() {
           >
             {/* Gauges */}
             <div className="flex gap-6 md:gap-8">
-              <ScoreGauge score={9.43} label="Editor" threshold={9.3} size={110} active />
-              <ScoreGauge score={9.5} label="CODEX" threshold={9.5} size={110} active />
+              <ScoreGauge score={9.5} label="Editor" threshold={9.5} size={110} active />
+              <ScoreGauge score={9.3} label="CODEX" threshold={9.3} size={110} active />
             </div>
 
             {/* Dimension bars */}

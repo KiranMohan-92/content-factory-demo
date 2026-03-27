@@ -63,7 +63,7 @@ export const agentDetails = {
     ],
     bullets: [
       'Seven-pass systematic review — seven distinct error types',
-      'Each dimension scored independently — minimum 9.0 each',
+      'Each dimension scored independently — minimum 8.5 each',
       'Overall minimum 9.3/10 to qualify for CODEX review',
       'Highest weight (20%) on Practical Utility',
     ],
