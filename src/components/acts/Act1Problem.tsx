@@ -20,20 +20,20 @@ export function Act1Problem() {
         <group position={[groupX, -0.5, 0]}>
           {step >= 1 && (
             <>
-              <GlowSphere position={[-1.5, 1, -1]} color="#f59e0b" label="Books & Gurus" radius={0.3} active pulsate />
-              <GlowSphere position={[0, -1, -1.5]} color="#e11d48" label="AI-Generated" radius={0.4} active pulsate />
-              <GlowSphere position={[1.5, 1, -1]} color="#9933ff" label="Social Media" radius={0.28} active pulsate />
+              <GlowSphere position={[-2, 1.2, -1]} color="#f59e0b" label="Books & Gurus" radius={0.3} active pulsate />
+              <GlowSphere position={[0, -1.2, -1.5]} color="#e11d48" label="AI-Generated" radius={0.4} active pulsate />
+              <GlowSphere position={[1.8, 1, -1]} color="#9933ff" label="Social Media" radius={0.28} active pulsate />
             </>
           )}
           {step >= 2 && (
             <>
-              <ConnectionBeam start={[-1.5, 1, -1]} end={[0, -1, -1.5]} color="#e11d48" active />
-              <ConnectionBeam start={[1.5, 1, -1]} end={[0, -1, -1.5]} color="#e11d48" active />
-              <ConnectionBeam start={[-1.5, 1, -1]} end={[1.5, 1, -1]} color="#f59e0b" active />
+              <ConnectionBeam start={[-2, 1.2, -1]} end={[0, -1.2, -1.5]} color="#e11d48" active />
+              <ConnectionBeam start={[1.8, 1, -1]} end={[0, -1.2, -1.5]} color="#e11d48" active />
+              <ConnectionBeam start={[-2, 1.2, -1]} end={[1.8, 1, -1]} color="#f59e0b" active />
             </>
           )}
           {step >= 3 && (
-            <GlowSphere position={[0, 0.5, 0.5]} color="#ccff00" label="Hard-to-Vary Filter" sublabel="David Deutsch" radius={0.45} active pulsate />
+            <GlowSphere position={[0.3, 0.3, 0.5]} color="#ccff00" label="Hard-to-Vary Filter" sublabel="David Deutsch" radius={0.45} active pulsate />
           )}
         </group>
       </SceneContainer>
@@ -55,7 +55,7 @@ export function Act1Problem() {
         </motion.div>
 
         {/* RIGHT side cards — one at a time */}
-        <div className="absolute right-6 md:right-[6vw] top-[32vh] md:top-[30vh] max-w-[88vw] md:max-w-[420px] pointer-events-auto">
+        <div className="absolute right-6 md:right-[14vw] top-[32vh] md:top-[30vh] max-w-[88vw] md:max-w-[420px] pointer-events-auto">
           <AnimatePresence mode="wait">
             {step === 1 && (
               <motion.div key="crisis"
