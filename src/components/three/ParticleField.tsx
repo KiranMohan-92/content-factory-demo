@@ -13,16 +13,21 @@ export function ParticleField({ count = 150, color = '#ccff00', spread = 15 }: P
 
   const particles = useMemo(() => {
     const temp = []
+    let seed = 123456789
+    const random = () => {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0
+      return seed / 4294967296
+    }
     for (let i = 0; i < count; i++) {
       temp.push({
         position: new THREE.Vector3(
-          (Math.random() - 0.5) * spread,
-          (Math.random() - 0.5) * spread,
-          (Math.random() - 0.5) * spread
+          (random() - 0.5) * spread,
+          (random() - 0.5) * spread,
+          (random() - 0.5) * spread
         ),
-        speed: 0.002 + Math.random() * 0.005,
-        offset: Math.random() * Math.PI * 2,
-        scale: 0.02 + Math.random() * 0.03,
+        speed: 0.002 + random() * 0.005,
+        offset: random() * Math.PI * 2,
+        scale: 0.02 + random() * 0.03,
       })
     }
     return temp

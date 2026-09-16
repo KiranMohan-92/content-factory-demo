@@ -92,3 +92,47 @@ export const agentDetails = {
     ],
   },
 }
+
+export const outputFormats = [
+  { name: 'Article', length: '2,000–4,000 words', color: '#ccff00', desc: 'Deep-dive with hook, landscape, good explanation, counterarguments, practical steps' },
+  { name: 'X Thread', length: '8–15 tweets', color: '#4DD9D0', desc: 'Standalone tweets with numbered progression, specific examples, call to action' },
+  { name: 'LinkedIn Post', length: '300–600 words', color: '#9933ff', desc: 'Professional frame with workplace story, insight, 1-2 examples, hashtags' },
+  { name: 'Newsletter', length: '800–1,200 words', color: '#f59e0b', desc: 'Personal tone, "I discovered" framing, 2-3 examples, immediate action' },
+  { name: 'YouTube Script', length: '1,500–3,000 words', color: '#ec4899', desc: 'Scene descriptions, pacing notes, visual cues, chapter markers' },
+  { name: 'Podcast Notes', length: '800–1,500 words', color: '#EDF1FF', desc: 'Talking points, timestamps, discussion flow, linked resources' },
+]
+
+export const versionTimeline = [
+  {
+    version: 'v2.0',
+    date: 'Dec 2025',
+    title: 'Base Pipeline',
+    desc: '5-agent sequential workflow with Editor gate at 9.5',
+    problem: 'No automated quality enforcement existed',
+    color: '#ccff00',
+  },
+  {
+    version: 'v2.1',
+    date: 'Jan 2026',
+    title: 'External Verification',
+    desc: 'Added Phase 3.5 — verify entities, numbers, claims against primary sources',
+    problem: '2.9-point gap: internal scored 9.4, external scored 6.5',
+    color: '#4DD9D0',
+  },
+  {
+    version: 'v2.2',
+    date: 'Feb 2026',
+    title: 'CODEX Brutal Critic',
+    desc: 'Hostile cross-examination via OpenAI codex CLI with 9.3 gate',
+    problem: 'Editor missed deep issues — argument stress-testing, counterexamples, evidence forensics',
+    color: '#ec4899',
+  },
+  {
+    version: 'v2.3',
+    date: 'Mar 2026',
+    title: 'Gemini Research',
+    desc: 'Dynamic prompts + web search + multi-modal sources via Gemini CLI',
+    problem: 'Research phase limited to single-model knowledge without live web access',
+    color: '#9933ff',
+  },
+]

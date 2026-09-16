@@ -32,7 +32,7 @@ export const pipelinePhases: PipelinePhase[] = [
     id: 'writing',
     label: 'Writing',
     agent: 'Writer Agent v2.0',
-    description: 'Converts analysis to accessible content with traceability, counterarguments, practical utility.',
+    description: 'Produces 6 formats: article, X thread, LinkedIn, newsletter, YouTube script, podcast notes. Full traceability + counterarguments.',
     output: 'drafts/*.md',
     color: '#9933ff',
     icon: 'PenTool',

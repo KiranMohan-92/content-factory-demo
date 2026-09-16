@@ -15,13 +15,19 @@ export function TypewriterText({ text, className, speed = 40, delay = 0, onCompl
   const [started, setStarted] = useState(false)
 
   useEffect(() => {
-    if (!active) { setDisplayed(''); setStarted(false); return }
+    if (!active) {
+      const frame = requestAnimationFrame(() => {
+        setDisplayed('')
+        setStarted(false)
+      })
+      return () => cancelAnimationFrame(frame)
+    }
     const timer = setTimeout(() => setStarted(true), delay)
     return () => clearTimeout(timer)
   }, [delay, active])
 
   useEffect(() => {
-    if (!started) return
+    if (!active || !started) return
     if (displayed.length >= text.length) {
       onComplete?.()
       return
@@ -30,12 +36,12 @@ export function TypewriterText({ text, className, speed = 40, delay = 0, onCompl
       setDisplayed(text.slice(0, displayed.length + 1))
     }, speed)
     return () => clearTimeout(timer)
-  }, [displayed, started, text, speed, onComplete])
+  }, [displayed, started, text, speed, onComplete, active])
 
   return (
     <span className={cn('font-body', className)}>
-      {displayed}
-      {started && displayed.length < text.length && (
+      {active ? displayed : ''}
+      {active && started && displayed.length < text.length && (
         <span className="inline-block w-[2px] h-[1em] bg-lime ml-0.5 animate-pulse" />
       )}
     </span>

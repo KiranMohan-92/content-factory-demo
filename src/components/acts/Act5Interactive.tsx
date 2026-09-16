@@ -9,11 +9,11 @@ import { GridFloor } from '../three/GridFloor'
 import { GlassCard } from '../shared/GlassCard'
 import { pipelinePhases } from '../../data/pipeline-phases'
 import { deutschTests } from '../../data/deutsch-tests'
-import { agentDetails } from '../../data/article-scores'
+import { agentDetails, outputFormats, versionTimeline } from '../../data/article-scores'
 import { cn } from '../../lib/utils'
 import { OrbitControls } from '@react-three/drei'
 
-const TABS = ['Agents', 'Philosophy', 'System'] as const
+const TABS = ['Agents', 'Formats', 'Timeline'] as const
 type Tab = (typeof TABS)[number]
 
 const PENTAGON_R = 2
@@ -128,48 +128,52 @@ export function Act5Interactive() {
             </GlassCard>
           )}
 
-          {tab === 'Philosophy' && (
+          {tab === 'Formats' && (
             <GlassCard className="w-full px-6 md:px-8 py-5 md:py-6">
               <h3 className="text-base md:text-lg font-body text-cyan uppercase tracking-wider mb-4"
                 style={{ textShadow: '0 0 15px rgba(77,217,208,0.3)' }}>
-                5 Deutsch Tests ↔ ML Concepts
+                6 Output Formats Per Topic
               </h3>
-              <div className="space-y-3 md:space-y-4">
-                {deutschTests.map(test => (
-                  <div key={test.name} className="flex items-center gap-3 md:gap-4">
-                    <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: test.color, boxShadow: `0 0 10px ${test.color}40` }} />
-                    <span className="text-sm md:text-base font-display font-bold tracking-tight w-28 md:w-36" style={{ color: test.color }}>{test.name}</span>
-                    <span className="text-muted-foreground text-sm md:text-base hidden md:inline">≈</span>
-                    <span className="text-sm md:text-base font-body text-cyan w-32 md:w-44">{test.mlAnalogy}</span>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+                {outputFormats.map(fmt => (
+                  <div key={fmt.name} className="glass-card p-3 md:p-4 !bg-[rgba(2,4,10,0.94)]" style={{ borderColor: `${fmt.color}15` }}>
+                    <h4 className="font-display tracking-tight text-sm md:text-base font-bold mb-1" style={{ color: fmt.color }}>
+                      {fmt.name}
+                    </h4>
+                    <div className="text-xs text-muted-foreground mb-2 font-mono">{fmt.length}</div>
+                    <p className="text-xs md:text-sm text-[#EDF1FF]/70 leading-snug">{fmt.desc}</p>
                   </div>
                 ))}
               </div>
             </GlassCard>
           )}
 
-          {tab === 'System' && (
+          {tab === 'Timeline' && (
             <GlassCard className="w-full px-6 md:px-8 py-5 md:py-6">
               <h3 className="text-base md:text-lg font-body text-purple uppercase tracking-wider mb-4"
                 style={{ textShadow: '0 0 15px rgba(153,51,255,0.3)' }}>
-                Why This Architecture is Hard-to-Vary
+                Version Evolution
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 text-sm md:text-base font-body">
-                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-lime/8 p-4">
-                  <div className="text-lime font-bold font-display tracking-tight text-base md:text-lg mb-2">Why Sequential?</div>
-                  <div className="text-[#EDF1FF]/70 leading-relaxed">Can't analyze before researching. Can't edit before writing. Each agent criticizes completed work.</div>
-                </div>
-                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-cyan/8 p-4">
-                  <div className="text-cyan font-bold font-display tracking-tight text-base md:text-lg mb-2">Why Specialized?</div>
-                  <div className="text-[#EDF1FF]/70 leading-relaxed">Combined roles create blind spots. You know what you meant, so you don't see where it's unclear.</div>
-                </div>
-                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-purple/8 p-4">
-                  <div className="text-purple font-bold font-display tracking-tight text-base md:text-lg mb-2">Why Dual Gates?</div>
-                  <div className="text-[#EDF1FF]/70 leading-relaxed">Editor catches surface issues. CODEX catches deep issues. The 0.2-point gap is where world-class lives.</div>
-                </div>
-                <div className="glass-card !bg-[rgba(2,4,10,0.94)] border-orange/8 p-4">
-                  <div className="text-orange font-bold font-display tracking-tight text-base md:text-lg mb-2">Why Can't Skip?</div>
-                  <div className="text-[#EDF1FF]/70 leading-relaxed">Skipping research → bias. Skipping analysis → no insight. Skipping CODEX → 2.9-point gap returns.</div>
-                </div>
+              <div className="space-y-4">
+                {versionTimeline.map((v, i) => (
+                  <div key={v.version} className="flex gap-4 items-start">
+                    {/* Timeline dot + line */}
+                    <div className="flex flex-col items-center flex-shrink-0">
+                      <div className="w-3 h-3 rounded-full" style={{ background: v.color, boxShadow: `0 0 12px ${v.color}50` }} />
+                      {i < versionTimeline.length - 1 && <div className="w-px h-12 bg-white/10 mt-1" />}
+                    </div>
+                    {/* Content */}
+                    <div className="pb-2">
+                      <div className="flex items-baseline gap-3 mb-1">
+                        <span className="font-mono text-sm md:text-base font-bold" style={{ color: v.color }}>{v.version}</span>
+                        <span className="text-xs text-muted-foreground">{v.date}</span>
+                      </div>
+                      <h4 className="font-display tracking-tight text-base md:text-lg font-bold text-[#EDF1FF] mb-1">{v.title}</h4>
+                      <p className="text-sm text-[#EDF1FF]/70">{v.desc}</p>
+                      <p className="text-xs text-muted-foreground mt-1 italic">Problem solved: {v.problem}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </GlassCard>
           )}

@@ -15,22 +15,25 @@ export function AnimatedCounter({ from, to, duration = 2000, decimals = 1, class
   const [value, setValue] = useState(from)
 
   useEffect(() => {
-    if (!active) { setValue(from); return }
+    if (!active) return
     const start = performance.now()
+    let frame: number
     function tick(now: number) {
-      const t = Math.min((now - start) / duration, 1)
+      const t = duration <= 0 ? 1 : Math.min((now - start) / duration, 1)
       const eased = 1 - Math.pow(1 - t, 3)
       setValue(from + (to - from) * eased)
-      if (t < 1) requestAnimationFrame(tick)
+      if (t < 1) frame = requestAnimationFrame(tick)
     }
-    requestAnimationFrame(tick)
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
   }, [from, to, duration, active])
 
-  const color = value >= 9.3 ? 'score-excellent' : value >= 8.0 ? 'score-good' : value >= 7.0 ? 'score-warning' : 'score-fail'
+  const displayed = active ? value : from
+  const color = displayed >= 9.3 ? 'score-excellent' : displayed >= 8.0 ? 'score-good' : displayed >= 7.0 ? 'score-warning' : 'score-fail'
 
   return (
     <span className={cn(color, 'font-display font-bold tabular-nums', className)}>
-      {value.toFixed(decimals)}{suffix}
+      {displayed.toFixed(decimals)}{suffix}
     </span>
   )
 }
